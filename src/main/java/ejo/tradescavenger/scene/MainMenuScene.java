@@ -4,22 +4,24 @@ import com.ejo.ui.Scene;
 import com.ejo.ui.element.Text;
 import com.ejo.ui.element.widget.Button;
 import com.ejo.util.math.Vector;
+import ejo.tradescavenger.data.DataAtlas;
+import ejo.tradescavenger.data.indicator.Indicator;
 import ejo.tradescavenger.element.GradientRectangle;
+import ejo.tradescavenger.scene.manager.LoadedDataManager;
 import ejo.tradescavenger.util.TitleBounceHandler;
 
 import java.awt.*;
 
-public class TitleScene extends Scene {
+public class MainMenuScene extends Scene {
 
     private final TitleBounceHandler titleBounceHandler;
 
     private int buttonX;
-
     private Button startButtonMiddleBackTest;
     private Button startButtonUpperDataCenter;
     private Button startButtonLowerChartView;
 
-    public TitleScene() {
+    public MainMenuScene() {
         super("Title Scene");
 
         //Create Title
@@ -33,6 +35,8 @@ public class TitleScene extends Scene {
         //Add Elements
         addElements(title);
         addElements(startButtonMiddleBackTest, startButtonLowerChartView, startButtonUpperDataCenter);
+
+        addSceneManagers(new LoadedDataManager(this));
     }
 
 
@@ -51,6 +55,7 @@ public class TitleScene extends Scene {
 
     @Override
     public void updateAnimation() {
+        //Button Roll-In Animation
         int maxX = 100;
         if (buttonX < maxX) buttonX += 10;
         super.updateAnimation();
@@ -58,16 +63,16 @@ public class TitleScene extends Scene {
 
     public void initStartButtons() {
         Color widgetColor = new Color(255,0,0);
-        this.startButtonUpperDataCenter = new Button(this, Vector.NULL(),new Vector(200,200), widgetColor,"",() -> {
-            System.out.println("Weenies!");
+        this.startButtonUpperDataCenter = new Button(this, Vector.NULL(),new Vector(200,200), widgetColor,"D",() -> {
+            getWindow().setScene(new DataCenterScene());
         });
 
-        this.startButtonMiddleBackTest = new Button(this, Vector.NULL(),new Vector(200,200), widgetColor,"",() -> {
-            System.out.println("Weenies!");
+        this.startButtonMiddleBackTest = new Button(this, Vector.NULL(),new Vector(200,200), widgetColor,"B",() -> {
+            System.out.println("This is the BackTest Button");
         });
 
-        this.startButtonLowerChartView = new Button(this, Vector.NULL(),new Vector(200,200), widgetColor,"",() -> {
-            System.out.println("Weenies!");
+        this.startButtonLowerChartView = new Button(this, Vector.NULL(),new Vector(200,200), widgetColor,"C",() -> {
+            System.out.println("This is the ChartView Button");
         });
     }
 

@@ -9,7 +9,7 @@ public abstract class IndicatorMA extends Indicator {
     private final int period;
 
     public IndicatorMA(Stock stock, String name, int period) {
-        super(stock, name + "_" + period);
+        super(stock, name + period);
         this.period = period;
     }
 

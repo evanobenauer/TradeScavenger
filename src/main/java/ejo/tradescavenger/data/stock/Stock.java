@@ -2,10 +2,9 @@ package ejo.tradescavenger.data.stock;
 
 import com.ejo.util.time.DateTime;
 import ejo.tradescavenger.data.HistoricalDataContainer;
-import ejo.tradescavenger.setting.ProgressiveFileCSVMap;
 import ejo.tradescavenger.util.TimeFrame;
 
-public class Stock extends HistoricalDataContainer {
+public class Stock extends ejo.tradescavenger.data.HistoricalDataContainer {
 
     //Stock Information
     protected final String ticker;
@@ -14,7 +13,7 @@ public class Stock extends HistoricalDataContainer {
 
     //Default Constructor
     public Stock(String ticker, TimeFrame timeFrame, boolean extendedHours) {
-        super(new ProgressiveFileCSVMap("stock_data", ticker + "_" + timeFrame.getTag()));
+        super("stock_data", ticker + "_" + timeFrame.getTag());
         this.ticker = ticker;
         this.timeFrame = timeFrame;
         this.extendedHours = extendedHours;
@@ -57,4 +56,8 @@ public class Stock extends HistoricalDataContainer {
         return getData(dateTime)[4];
     }
 
+    @Override
+    public String toString() {
+        return ticker + "_" + timeFrame + (extendedHours ? "_EH" : "");
+    }
 }

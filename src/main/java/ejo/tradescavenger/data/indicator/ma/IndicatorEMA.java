@@ -9,9 +9,9 @@ public class IndicatorEMA extends IndicatorMA {
 
     private final IndicatorSMA equivalentSMA;
 
-    public IndicatorEMA(Stock stock, String name, int period) {
-        super(stock, name, period);
-        this.equivalentSMA = new IndicatorSMA(getStock(), name + "_equivSMA",period);
+    public IndicatorEMA(Stock stock, int period) {
+        super(stock, "EMA", period);
+        this.equivalentSMA = new IndicatorSMA(getStock(),period);
     }
 
     @Override
@@ -47,7 +47,7 @@ public class IndicatorEMA extends IndicatorMA {
         double openEMA = MathUtil.roundDouble(open == NULL_VAL ? prevOpenEMA : open * weight + prevOpenEMA * (1 - weight), 4);
         double closeEMA = MathUtil.roundDouble(close == NULL_VAL ? prevCloseEMA : close * weight + prevCloseEMA * (1 - weight), 4);
         float[] result = new float[]{(float)openEMA, (float)closeEMA};
-        this.historicalDataHash.put(dateTime.getDateTimeID(), result);
+        this.data.put(dateTime.getDateTimeID(), result);
         return result;
     }
 

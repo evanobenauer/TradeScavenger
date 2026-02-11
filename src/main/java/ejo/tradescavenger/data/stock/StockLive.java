@@ -170,7 +170,7 @@ public class StockLive extends Stock {
             //Save Live Data as Historical [Data is stored as (DATETIME,OPEN,CLOSE,MIN,MAX)]
             float[] timeFrameData = {open, price, min, max};
             DateTime openTime = new DateTime(ct.getYear(), ct.getMonth(), ct.getDay(), ct.getHour(), ct.getMinute(), ct.getSecond() - timeFrame.getSeconds());
-            if (openTime != null) historicalDataHash.put(openTime.getDateTimeID(), timeFrameData);
+            if (openTime != null) data.put(openTime.getDateTimeID(), timeFrameData);
 
             //Set stock ready for open
             doOpen.reset();

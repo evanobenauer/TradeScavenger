@@ -33,6 +33,10 @@ public class TitleBounceHandler {
         return pos;
     }
 
+    public Angle getAngle() {
+        return this.angle;
+    }
+
     public Text getText() {
         return text;
     }

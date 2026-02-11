@@ -9,8 +9,8 @@ import java.util.ArrayList;
 
 public class IndicatorSMA extends IndicatorMA {
 
-    public IndicatorSMA(Stock stock, String name, int period) {
-        super(stock, name, period);
+    public IndicatorSMA(Stock stock, int period) {
+        super(stock, "SMA", period);
     }
 
     @Override
@@ -51,7 +51,7 @@ public class IndicatorSMA extends IndicatorMA {
         double openAvg = MathUtil.roundDouble(calculateAverage(openAvgList), 4);
         double closeAvg = MathUtil.roundDouble(calculateAverage(closeAvgList), 4);
         float[] result = new float[]{(float)openAvg, (float)closeAvg};
-        this.historicalDataHash.put(dateTime.getDateTimeID(), result);
+        this.data.put(dateTime.getDateTimeID(), result);
         return result;
     }
 

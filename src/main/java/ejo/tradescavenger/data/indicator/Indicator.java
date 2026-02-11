@@ -3,12 +3,11 @@ package ejo.tradescavenger.data.indicator;
 import com.ejo.util.setting.Container;
 import com.ejo.util.time.DateTime;
 import com.ejo.util.time.TimeUtil;
-import ejo.tradescavenger.data.HistoricalDataContainer;
 import ejo.tradescavenger.data.stock.Stock;
-import ejo.tradescavenger.setting.ProgressiveFileCSVMap;
+import ejo.tradescavenger.data.HistoricalDataContainer;
 import ejo.tradescavenger.util.StockTimeUtil;
 
-public abstract class Indicator extends HistoricalDataContainer {
+public abstract class Indicator extends ejo.tradescavenger.data.HistoricalDataContainer {
 
     private final Stock stock;
     private final String name;
@@ -19,7 +18,7 @@ public abstract class Indicator extends HistoricalDataContainer {
     protected DateTime currentCalculationDate;
 
     public Indicator(Stock stock, String name) {
-        super(new ProgressiveFileCSVMap("stock_data/indicators",name + "_" + stock.getFileCSVMap().getFileName()));
+        super("stock_data/indicators",name + "_" + stock.getFileName());
         this.stock = stock;
         this.name = name;
 
@@ -79,4 +78,8 @@ public abstract class Indicator extends HistoricalDataContainer {
         return name;
     }
 
+    @Override
+    public String toString() {
+        return getFileName();
+    }
 }
