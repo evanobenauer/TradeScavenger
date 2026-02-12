@@ -12,7 +12,7 @@ import java.util.HashMap;
 
 //Data Hash Setup: Key = DateTimeID, Value = float array
 // (maybe use a linked hashmap for better traversing. Memory is much higher though which for this app is not good)
-public abstract class HistoricalDataContainer extends FileCSV<HashMap<Long, float[]>> {
+public abstract class HistoricalDataContainer extends FileCSV<HashMap<Long, float[]>,HashMap<Long, float[]>> {
 
     protected static final int NULL_VAL = -1;
 
@@ -77,7 +77,10 @@ public abstract class HistoricalDataContainer extends FileCSV<HashMap<Long, floa
         this.loadProgress.set(0d);
         this.loading = true;
 
-        //Define start & end time IDs
+        //Init file
+        File inputFile = new File(FileUtil.getFilePath(folderPath, fileName));
+
+        //Init start & end time IDs
         boolean runTimeCheck = startTime != null && endTime != null;
         long startTimeID = 0;
         long endTimeID = 0;
@@ -85,9 +88,6 @@ public abstract class HistoricalDataContainer extends FileCSV<HashMap<Long, floa
             startTimeID = startTime.getDateTimeID();
             endTimeID = endTime.getDateTimeID();
         }
-
-        //Init file
-        File inputFile = new File(FileUtil.getFilePath(folderPath, fileName));
 
         //Init date ranges
         long dateHigh = 0;
@@ -128,6 +128,7 @@ public abstract class HistoricalDataContainer extends FileCSV<HashMap<Long, floa
         this.dateLow = DateTime.getById(dateLow);
         this.dateHigh = DateTime.getById(dateHigh);
 
+        this.loadProgress.set(1d);
         this.loading = false;
         return this.data;
     }
@@ -147,6 +148,7 @@ public abstract class HistoricalDataContainer extends FileCSV<HashMap<Long, floa
 
     //The save method will completely overwrite already existing data in the csv.
     // If you want to save and add onto the csv, you must use the general save method
+    @Override
     public boolean save(HashMap<Long, float[]> hashMap) {
         this.saving = true;
         this.saveProgress.set(0d);
@@ -169,6 +171,7 @@ public abstract class HistoricalDataContainer extends FileCSV<HashMap<Long, floa
             this.data = hashMap;
 
             writer.close();
+            this.saveProgress.set(1d);
             this.saving = false;
             return true;
         } catch (IOException e) {
@@ -181,6 +184,7 @@ public abstract class HistoricalDataContainer extends FileCSV<HashMap<Long, floa
 
     //This save method does NOT overwrite the previous data stored in the CSV
     //The method will also call upon load(), and the file will be updated accordingly
+    //TODO: Look into how this affects progress. It may not function properly or accurately
     public boolean save() {
         //Put all currently data into a new map
         HashMap<Long, float[]> currentMap = (HashMap<Long, float[]>) data.clone();

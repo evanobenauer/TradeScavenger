@@ -1,7 +1,7 @@
 package ejo.tradescavenger.element;
 
 import com.ejo.ui.Scene;
-import com.ejo.ui.element.shape.Rectangle;
+import com.ejo.ui.element.polygon.Rectangle;
 import com.ejo.ui.render.GLUtil;
 import com.ejo.util.math.Vector;
 import org.lwjgl.opengl.GL11;
@@ -22,9 +22,7 @@ public class GradientRectangle extends Rectangle {
     }
 
     public void draw(Vector mousePos) {
-        vertices[1] = new Vector(0,getSize().getY());
-        vertices[2] = getSize();
-        vertices[3] = new Vector(getSize().getX(),0);
+        updateVertices();
         GLUtil.color(getColor().getRed(),getColor().getGreen(),getColor().getBlue(),getColor().getAlpha());
         GL11.glBegin(GL11.GL_POLYGON);
         boolean cycle = true;
@@ -40,7 +38,6 @@ public class GradientRectangle extends Rectangle {
         GL11.glEnd();
         GLUtil.color(1,1,1,1);
     }
-
 
     public Color getColor() {
         return getColor1();

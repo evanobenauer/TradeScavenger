@@ -7,7 +7,7 @@ import ejo.tradescavenger.data.stock.Stock;
 import ejo.tradescavenger.data.HistoricalDataContainer;
 import ejo.tradescavenger.util.StockTimeUtil;
 
-public abstract class Indicator extends ejo.tradescavenger.data.HistoricalDataContainer {
+public abstract class Indicator extends HistoricalDataContainer {
 
     private final Stock stock;
     private final String name;

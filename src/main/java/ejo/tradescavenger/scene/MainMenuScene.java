@@ -57,14 +57,14 @@ public class MainMenuScene extends Scene {
     public void updateAnimation() {
         //Button Roll-In Animation
         int maxX = 100;
-        if (buttonX < maxX) buttonX += 10;
+        if (buttonX < maxX) buttonX += 15;
         super.updateAnimation();
     }
 
     public void initStartButtons() {
         Color widgetColor = new Color(255,0,0);
         this.startButtonUpperDataCenter = new Button(this, Vector.NULL(),new Vector(200,200), widgetColor,"D",() -> {
-            getWindow().setScene(new DataCenterScene());
+            getWindow().setSceneTransitioned(new DataCenterScene());
         });
 
         this.startButtonMiddleBackTest = new Button(this, Vector.NULL(),new Vector(200,200), widgetColor,"B",() -> {

@@ -14,7 +14,7 @@ repositories {
 project.ext.lwjglVersion = "3.3.1"
 project.ext.lwjglNatives = "natives-windows"
 
-project.ext.appnexusVersion = "1901d8a1ae"
+project.ext.appnexusVersion = "454581d318"
 
 dependencies {
     implementation "com.github.evanobenauer:AppNexus:$appnexusVersion"

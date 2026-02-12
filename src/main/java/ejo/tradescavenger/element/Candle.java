@@ -2,7 +2,7 @@ package ejo.tradescavenger.element;
 
 import com.ejo.ui.Scene;
 import com.ejo.ui.element.DrawableElement;
-import com.ejo.ui.element.shape.Rectangle;
+import com.ejo.ui.element.polygon.Rectangle;
 import com.ejo.util.math.Vector;
 import com.ejo.util.time.DateTime;
 import ejo.tradescavenger.data.stock.StockLive;

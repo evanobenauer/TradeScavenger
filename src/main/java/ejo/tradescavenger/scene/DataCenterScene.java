@@ -4,6 +4,9 @@ import com.ejo.ui.Scene;
 import com.ejo.ui.element.ProgressBar;
 import com.ejo.ui.element.Text;
 import com.ejo.ui.element.widget.Button;
+import com.ejo.ui.element.widget.settingwidget.Cycle;
+import com.ejo.ui.element.widget.settingwidget.DropDown;
+import com.ejo.util.file.CSVUtil;
 import com.ejo.util.math.Angle;
 import com.ejo.util.math.Vector;
 import com.ejo.util.setting.Container;
@@ -45,7 +48,7 @@ public class DataCenterScene extends Scene  {
 
         //Init main menu button
         Button mainMenuButton = new Button(this,new Vector(2,2),new Vector(300,60),widgetColor,"Main Menu",() -> {
-           getWindow().setScene(new MainMenuScene());
+           getWindow().setSceneTransitioned(new MainMenuScene());
         });
 
 
@@ -60,8 +63,16 @@ public class DataCenterScene extends Scene  {
 
         //======================================
 
-        Button setStockButton = new Button(this, new Vector(100, 300), new Vector(400, 60), widgetColor, "Set Stock", () -> {
-            DataAtlas.LOADED_STOCK = new Stock("SPY", TimeFrame.ONE_MINUTE, true);
+        //TODO: Make sure to have it save the current file to the SettingAtlas
+        DropDown<String> setStockDropDown = new DropDown<>(this, new Vector(100,300),new Vector(600,60),widgetColor,"Stock", "", new Container<>("NONE"), CSVUtil.getCSVFilesInDirectory("stock_data").toArray(new String[0]));
+        setStockDropDown.setAction(() -> {
+            String fileName = setStockDropDown.getContainer().get().replace(".csv","");
+            String[] datas = fileName.split("_");
+            if (datas.length <= 1) return;
+            TimeFrame timeFrame = TimeFrame.getFromTag(datas[1]);
+            if (timeFrame == null) return;
+            //Add a check here. If the current stock == the selected one, don't make a new one. return
+            DataAtlas.LOADED_STOCK = new Stock(datas[0], timeFrame, fileName.contains("_EH"));
         });
 
         Button loadStockButton = new Button(this, new Vector(100, 550), new Vector(400, 60), widgetColor, "Load Stock", () -> {
@@ -77,7 +88,7 @@ public class DataCenterScene extends Scene  {
             thread.start();
         });
 
-        addElements(setStockButton, loadStockButton);
+        addElements(setStockDropDown, loadStockButton);
     }
 
 
@@ -109,6 +120,6 @@ public class DataCenterScene extends Scene  {
     public void onKeyPress(int key, int scancode, int action, int mods) {
         super.onKeyPress(key, scancode, action, mods);
         if (key == GLFW.GLFW_KEY_ESCAPE)
-            getWindow().setScene(new MainMenuScene());
+            getWindow().setSceneTransitioned(new MainMenuScene());
     }
 }
