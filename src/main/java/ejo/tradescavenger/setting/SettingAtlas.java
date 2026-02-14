@@ -13,6 +13,11 @@ public class SettingAtlas {
 
     //TODO: ADD ALL SETTINGS IN HERE
 
+    @Deprecated
     public static final Setting<Integer> LIVE_SECOND_OFFSET = new Setting<>(SETTING_MANAGER,"live_secondOffset", 0);
+
+
+    public static final Setting<String> DATA_SELECTED_STOCK_FILE = new Setting<>(SETTING_MANAGER,"data_selectedStockFile", "NONE");
+    public static final Setting<String> DATA_SELECTED_INDICATOR_FILE = new Setting<>(SETTING_MANAGER,"data_selectedIndicatorFile", "NONE");
 
 }

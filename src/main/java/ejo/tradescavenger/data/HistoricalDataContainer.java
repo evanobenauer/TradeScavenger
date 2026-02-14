@@ -4,6 +4,7 @@ import com.ejo.util.file.FileCSV;
 import com.ejo.util.file.FileUtil;
 import com.ejo.util.setting.Container;
 import com.ejo.util.time.DateTime;
+import com.ejo.util.time.StopWatch;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -57,6 +58,8 @@ public abstract class HistoricalDataContainer extends FileCSV<HashMap<Long, floa
         return rawData;
     }
 
+    public abstract boolean isValidDateTime(DateTime dateTime);
+
 
     @Override
     public void unLoad() {
@@ -74,6 +77,8 @@ public abstract class HistoricalDataContainer extends FileCSV<HashMap<Long, floa
     // It does NOT overwrite the entire map like a normal FileCSV would
     // If you need to overwrite the entire map, call unLoad() first
     public HashMap<Long, float[]> load(DateTime startTime, DateTime endTime) {
+        StopWatch watch = new StopWatch();
+        watch.start();
         this.loadProgress.set(0d);
         this.loading = true;
 
@@ -101,8 +106,8 @@ public abstract class HistoricalDataContainer extends FileCSV<HashMap<Long, floa
                 String[] row = line.split(",");
                 long key = Long.parseLong(row[0]);
 
-                //Execute Time Checker
-                if (runTimeCheck && (key < startTimeID || key > endTimeID)) continue;
+                //Execute Time Checker //TODO: isValidTime slows down loading by a lot probs cuz im making a new object
+                if (isValidDateTime(DateTime.getById(key)) && runTimeCheck && (key < startTimeID || key > endTimeID)) continue;
 
                 //Convert loaded string data to primitive float array
                 float[] rowCut = new float[5];
@@ -125,11 +130,18 @@ public abstract class HistoricalDataContainer extends FileCSV<HashMap<Long, floa
         }
 
         //Update date range
-        this.dateLow = DateTime.getById(dateLow);
-        this.dateHigh = DateTime.getById(dateHigh);
+        try {
+            this.dateLow = DateTime.getById(dateLow);
+            this.dateHigh = DateTime.getById(dateHigh);
+        } catch (StringIndexOutOfBoundsException _) {
+            System.out.println(this + ": Date Range was not set.");
+            System.out.println("This is probably due to the file not existing or being empty");
+        }
 
         this.loadProgress.set(1d);
         this.loading = false;
+        watch.stop();
+        System.out.println(this + ": took " + watch.getStopTimeMS() + "ms to load");
         return this.data;
     }
 
@@ -150,6 +162,8 @@ public abstract class HistoricalDataContainer extends FileCSV<HashMap<Long, floa
     // If you want to save and add onto the csv, you must use the general save method
     @Override
     public boolean save(HashMap<Long, float[]> hashMap) {
+        StopWatch watch = new StopWatch();
+        watch.start();
         this.saving = true;
         this.saveProgress.set(0d);
 
@@ -173,6 +187,8 @@ public abstract class HistoricalDataContainer extends FileCSV<HashMap<Long, floa
             writer.close();
             this.saveProgress.set(1d);
             this.saving = false;
+            watch.stop();
+            System.out.println(this + ": took " + watch.getStopTimeMS() + "ms to save");
             return true;
         } catch (IOException e) {
             System.out.println("Error writing data to " + outputFile);
@@ -190,7 +206,14 @@ public abstract class HistoricalDataContainer extends FileCSV<HashMap<Long, floa
         HashMap<Long, float[]> currentMap = (HashMap<Long, float[]>) data.clone();
 
         //Load all data stored in the file into a new map
-        HashMap<Long, float[]> loadedMap = (HashMap<Long, float[]>) load().clone();
+        HashMap<Long, float[]> loadedMap;
+        File file = new File(getFolderPath(),getFileName());
+        if (file.exists()) {
+            loadedMap = (HashMap<Long, float[]>) load().clone();
+        } else {
+            generateFile();
+            loadedMap = new HashMap<>();
+        }
 
         //Apply current data & Overwrite potential repeats in the loaded map clone
         loadedMap.putAll(currentMap);

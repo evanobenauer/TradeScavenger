@@ -4,10 +4,10 @@ import com.ejo.ui.Scene;
 import com.ejo.ui.element.Text;
 import com.ejo.ui.element.widget.Button;
 import com.ejo.util.math.Vector;
-import ejo.tradescavenger.data.DataAtlas;
-import ejo.tradescavenger.data.indicator.Indicator;
 import ejo.tradescavenger.element.GradientRectangle;
-import ejo.tradescavenger.scene.manager.LoadedDataManager;
+import ejo.tradescavenger.scene.datacenter.DataCenterScene;
+import ejo.tradescavenger.scene.manager.DataDisplayManager;
+import ejo.tradescavenger.setting.SettingAtlas;
 import ejo.tradescavenger.util.TitleBounceHandler;
 
 import java.awt.*;
@@ -23,6 +23,7 @@ public class MainMenuScene extends Scene {
 
     public MainMenuScene() {
         super("Title Scene");
+        SettingAtlas.SETTING_MANAGER.loadAll();
 
         //Create Title
         Text title = new Text(this,Vector.NULL(),"Trade Scavenger", new Font("Arial Black",Font.PLAIN,100),Color.WHITE, Text.Type.STATIC);
@@ -36,7 +37,7 @@ public class MainMenuScene extends Scene {
         addElements(title);
         addElements(startButtonMiddleBackTest, startButtonLowerChartView, startButtonUpperDataCenter);
 
-        addSceneManagers(new LoadedDataManager(this));
+        addSceneManagers(new DataDisplayManager(this));
     }
 
 

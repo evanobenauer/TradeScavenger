@@ -2,6 +2,7 @@ package ejo.tradescavenger.data.stock;
 
 import com.ejo.util.time.DateTime;
 import ejo.tradescavenger.data.HistoricalDataContainer;
+import ejo.tradescavenger.util.StockTimeUtil;
 import ejo.tradescavenger.util.TimeFrame;
 
 public class Stock extends HistoricalDataContainer {
@@ -13,7 +14,7 @@ public class Stock extends HistoricalDataContainer {
 
     //Default Constructor
     public Stock(String ticker, TimeFrame timeFrame, boolean extendedHours) {
-        super("stock_data", ticker + "_" + timeFrame.getTag());
+        super("stock_data", ticker + "_" + timeFrame.getTag() + (extendedHours ? "_EH" : ""));
         this.ticker = ticker;
         this.timeFrame = timeFrame;
         this.extendedHours = extendedHours;
@@ -22,6 +23,11 @@ public class Stock extends HistoricalDataContainer {
     @Override
     public float[] getNullData() {
         return new float[]{NULL_VAL,NULL_VAL,NULL_VAL,NULL_VAL,NULL_VAL};
+    }
+
+    @Override
+    public boolean isValidDateTime(DateTime dateTime) {
+        return StockTimeUtil.isPriceActive(extendedHours, dateTime);
     }
 
     public float getOpen(DateTime dateTime) {
@@ -60,6 +66,6 @@ public class Stock extends HistoricalDataContainer {
 
     @Override
     public String toString() {
-        return ticker + "_" + timeFrame + (extendedHours ? "_EH" : "");
+        return fileName;
     }
 }

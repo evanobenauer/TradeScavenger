@@ -8,15 +8,17 @@ import com.ejo.util.time.DateTime;
 import ejo.tradescavenger.data.DataAtlas;
 import ejo.tradescavenger.data.HistoricalDataContainer;
 import ejo.tradescavenger.data.indicator.Indicator;
-import ejo.tradescavenger.data.stock.Stock;
 
 import java.awt.*;
+import java.util.ConcurrentModificationException;
 
-public class LoadedDataManager extends SceneManager {
+//TODO: Make this text kinda nicer lookin. Maybe add a nice background with a red outline??
+
+public class DataDisplayManager extends SceneManager {
 
     private static final FontRenderer DATA_SET_FONT_RENDERER = new FontRenderer(new Font("Arial",Font.PLAIN,20));
 
-    public LoadedDataManager(Scene scene) {
+    public DataDisplayManager(Scene scene) {
         super(scene);
     }
 
@@ -30,10 +32,15 @@ public class LoadedDataManager extends SceneManager {
             yIncrement += stockSet.getIncrement();
         }
 
-        for (Indicator indicator: DataAtlas.LOADED_INDICATORS) {
-            DataSet indicatorSet = new DataSet(indicator);
-            indicatorSet.draw(yIncrement);
-            yIncrement += indicatorSet.getIncrement();
+        try {
+            for (Indicator indicator : DataAtlas.LOADED_INDICATORS.values()) {
+                DataSet indicatorSet = new DataSet(indicator);
+                indicatorSet.draw(yIncrement);
+                yIncrement += indicatorSet.getIncrement();
+            }
+        } catch (ConcurrentModificationException _) {
+            System.out.println("Ran into a concurrent modification while trying to display the Loaded Indicators List");
+            System.out.println("The list was probably being rendered while a file was loading");
         }
     }
 
@@ -57,8 +64,8 @@ public class LoadedDataManager extends SceneManager {
         }
 
         String getPrefix() {
-            if (container instanceof Stock) return "Loaded Stock: ";
-            if (container instanceof Indicator) return "Loaded Indicator: ";
+            //if (container instanceof Stock) return "Loaded Stock: ";
+            //if (container instanceof Indicator) return "Loaded Indicator: ";
             return "";
         }
 

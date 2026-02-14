@@ -6,8 +6,8 @@ import ejo.tradescavenger.data.stock.Stock;
 //TODO: Import this from TradeCompanion. It's messy over there... Beware...
 public class IndicatorMACD extends Indicator {
 
-    public IndicatorMACD(Stock stock, String name) {
-        super(stock, name);
+    public IndicatorMACD(Stock stock) {
+        super(stock, "MACD" + "_Put the lengths here");
     }
 
     @Override

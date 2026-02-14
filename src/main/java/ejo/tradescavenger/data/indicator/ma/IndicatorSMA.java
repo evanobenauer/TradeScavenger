@@ -15,7 +15,7 @@ public class IndicatorSMA extends IndicatorMA {
 
     @Override
     public float[] calculate(DateTime dateTime) {
-        if (!StockTimeUtil.isPriceActive(getStock().isExtendedHours(), dateTime)) return getNullData();
+        if (!isValidDateTime(dateTime)) return getNullData();
 
         //Define all candle average lists
         ArrayList<Float> openAvgList = new ArrayList<>();
@@ -30,7 +30,7 @@ public class IndicatorSMA extends IndicatorMA {
 
             //If the previous price is not it, iterate the loop, but do not increment the candle
             // so that we try again at the next one back
-            if (!StockTimeUtil.isPriceActive(getStock().isExtendedHours(), nextDate)) {
+            if (!isValidDateTime(nextDate)) {
                 loopCount++;
                 continue;
             }

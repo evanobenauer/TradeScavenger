@@ -16,7 +16,7 @@ public class IndicatorEMA extends IndicatorMA {
 
     @Override
     public float[] calculate(DateTime dateTime) {
-        if (!StockTimeUtil.isPriceActive(getStock().isExtendedHours(), dateTime)) return getNullData();
+        if (!isValidDateTime(dateTime)) return getNullData();
 
         //Get Current Stock Data
         float[] data = getStock().getData(dateTime);
@@ -27,7 +27,7 @@ public class IndicatorEMA extends IndicatorMA {
         int loopCount = 1;
         int step = getStock().getTimeFrame().getSeconds();
         DateTime lastCandleTime = dateTime.getAdded(-step * loopCount);
-        while (!StockTimeUtil.isPriceActive(getStock().isExtendedHours(), lastCandleTime)) {
+        while (!isValidDateTime(lastCandleTime)) {
             loopCount++;
             lastCandleTime = dateTime.getAdded(-step * loopCount);
         }

@@ -5,7 +5,6 @@ import com.ejo.util.time.DateTime;
 import com.ejo.util.time.TimeUtil;
 import ejo.tradescavenger.data.stock.Stock;
 import ejo.tradescavenger.data.HistoricalDataContainer;
-import ejo.tradescavenger.util.StockTimeUtil;
 
 public abstract class Indicator extends HistoricalDataContainer {
 
@@ -18,7 +17,7 @@ public abstract class Indicator extends HistoricalDataContainer {
     protected DateTime currentCalculationDate;
 
     public Indicator(Stock stock, String name) {
-        super("stock_data/indicators",name + "_" + stock.getFileName());
+        super("stock_data/indicator_data",name + "_" + stock.getFileName());
         this.stock = stock;
         this.name = name;
 
@@ -27,6 +26,10 @@ public abstract class Indicator extends HistoricalDataContainer {
         this.currentCalculationDate = null;
     }
 
+    @Override
+    public boolean isValidDateTime(DateTime dateTime) {
+        return stock.isValidDateTime(dateTime);
+    }
 
     public abstract float[] calculate(DateTime dateTime);
 
@@ -35,6 +38,15 @@ public abstract class Indicator extends HistoricalDataContainer {
         this.calculationProgress.set(0d);
         this.currentCalculationDate = null;
         this.calculating = true;
+
+        //TODO: Test this eventually and overwrite the lower while loop with it
+        /*StockTraversalUtil.traverseCandles(stock,start,end,(currentDateTime,i) -> {
+            //Update progression variables
+            this.currentCalculationDate = currentDateTime;
+            this.calculationProgress.set(TimeUtil.getDateTimePercent(start,currentDateTime,end));
+
+            calculate(currentDateTime);
+        });*/
 
         if (end.getDateTimeID() < start.getDateTimeID()) return;
         if (start.getDateTimeID() == end.getDateTimeID()) {
@@ -48,10 +60,9 @@ public abstract class Indicator extends HistoricalDataContainer {
         int step = stock.getTimeFrame().getSeconds();
         while (currentDateTime.getDateTimeID() < end.getDateTimeID()) {
             currentDateTime = start.getAdded(step * loopCount);
-
-            //If the next price is not it, iterate the loop, but do not increment the candle
+            //If the next price is not valid, iterate the loop, but do not increment the candle
             // so that we try again at the next one forward
-            if (!StockTimeUtil.isPriceActive(stock.isExtendedHours(), currentDateTime)) {
+            if (!isValidDateTime(currentDateTime)) {
                 loopCount++;
                 continue;
             }
@@ -74,7 +85,7 @@ public abstract class Indicator extends HistoricalDataContainer {
         return stock;
     }
 
-    public String getName() {
+    public String getIndicatorName() {
         return name;
     }
 

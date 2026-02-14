@@ -4,13 +4,13 @@ import com.ejo.util.time.DateTime;
 import ejo.tradescavenger.data.indicator.Indicator;
 import ejo.tradescavenger.data.stock.Stock;
 
-//TODO: Add a third data entry specifically for the VolumeMA 
+//TODO: Add a third data entry specifically for the VolumeMA
 public abstract class IndicatorMA extends Indicator {
 
     private final int period;
 
     public IndicatorMA(Stock stock, String name, int period) {
-        super(stock, name + period);
+        super(stock, name + "_" + period);
         this.period = period;
     }
 
