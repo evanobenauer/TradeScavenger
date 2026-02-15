@@ -16,7 +16,7 @@ public class IndicatorMACD extends Indicator {
     }
 
     @Override
-    public float[] getNullData() {
+    protected float[] getNullData() {
         return new float[]{NULL_VAL,NULL_VAL};
     }
 }

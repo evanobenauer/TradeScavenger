@@ -107,7 +107,7 @@ public class RemovalList<V> extends DrawableElement implements Interactable {
     }
 
     private void drawTextList(Vector mousePos) {
-        double border = fontGeneral.getHeight() / 5;
+        double border = fontGeneral.getHeight() / 5d;
         double add = -border;
         for (Text text : textList) {
             //Update Pos
@@ -121,7 +121,7 @@ public class RemovalList<V> extends DrawableElement implements Interactable {
             if (textWidth > widgetWidth) scale = widgetWidth / textWidth;
             Vector scaleVector = new Vector(scale,scale);
             GLUtil.textureScale(new Vector(scaleVector.getX(),scaleVector.getY(),1));
-            text.setPos(pos.getAdded(border + 2, fontGeneral.getHeight() / 2 * scale));
+            text.setPos(pos.getAdded(border + 2, fontGeneral.getHeight() / 2d * scale));
 
             //Update Color
             boolean hovered = text.getMouseHoveredCalculation(mousePos) && isMouseHovered();

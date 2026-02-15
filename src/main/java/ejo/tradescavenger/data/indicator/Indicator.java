@@ -5,6 +5,7 @@ import com.ejo.util.time.DateTime;
 import com.ejo.util.time.TimeUtil;
 import ejo.tradescavenger.data.stock.Stock;
 import ejo.tradescavenger.data.HistoricalDataContainer;
+import ejo.tradescavenger.util.StockTraversalUtil;
 
 public abstract class Indicator extends HistoricalDataContainer {
 
@@ -39,15 +40,21 @@ public abstract class Indicator extends HistoricalDataContainer {
         this.currentCalculationDate = null;
         this.calculating = true;
 
-        //TODO: Test this eventually and overwrite the lower while loop with it
-        /*StockTraversalUtil.traverseCandles(stock,start,end,(currentDateTime,i) -> {
+        StockTraversalUtil.traverseCandles(stock,start,end,(currentDateTime, i) -> {
             //Update progression variables
             this.currentCalculationDate = currentDateTime;
             this.calculationProgress.set(TimeUtil.getDateTimePercent(start,currentDateTime,end));
 
             calculate(currentDateTime);
-        });*/
+        });
 
+        this.calculationProgress.set(1d);
+        this.currentCalculationDate = null;
+        this.calculating = false;
+    }
+
+    @Deprecated
+    private void oldTraversal(DateTime start, DateTime end) {
         if (end.getDateTimeID() < start.getDateTimeID()) return;
         if (start.getDateTimeID() == end.getDateTimeID()) {
             calculate(start);
@@ -74,10 +81,6 @@ public abstract class Indicator extends HistoricalDataContainer {
             calculate(currentDateTime);
             loopCount++;
         }
-
-        this.calculationProgress.set(1d);
-        this.currentCalculationDate = null;
-        this.calculating = false;
     }
 
 

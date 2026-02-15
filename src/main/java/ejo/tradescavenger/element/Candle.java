@@ -25,7 +25,7 @@ public class Candle extends DrawableElement {
 
     private final double width;
 
-    private final Vector scale;
+    private Vector scale;
 
     //Historical Candle
     public Candle(Scene scene, Stock stock, DateTime dateTime, double x, double focusY, double focusPrice, double width, Vector scale) {
@@ -59,9 +59,17 @@ public class Candle extends DrawableElement {
         int colorOffset = 100;
         double wickWidth = getBodySize().getX() / 6;
         Vector wickPos = getPos().getAdded((getBodySize().getX() - wickWidth) / 2, 0);
-        Color wickColor = new Color(getColor().getRed() - colorOffset, getColor().getGreen() - colorOffset, getColor().getBlue() - colorOffset);
-        new Rectangle(getScene(),wickPos,new Vector(wickWidth, -(max - open) * scale.getY()),wickColor).draw();
-        new Rectangle(getScene(),wickPos,new Vector(wickWidth, (open - min) * scale.getY()),wickColor).draw();
+
+        int r = Math.clamp(getColor().getRed() - colorOffset,0,255);
+        int g = Math.clamp(getColor().getGreen() - colorOffset,0,255);
+        int b = Math.clamp(getColor().getBlue() - colorOffset,0,255);
+        int a;
+
+        Color wickColor = new Color(r,g,b);
+        double wickLengthT = -(max - open) * scale.getY();
+        double wickLengthB = (open - min) * scale.getY();
+        new Rectangle(getScene(),wickPos,new Vector(wickWidth, wickLengthT),wickColor).draw();
+        new Rectangle(getScene(),wickPos,new Vector(wickWidth, wickLengthB),wickColor).draw();
 
         //Body
         new Rectangle(getScene(),getPos(),new Vector(getBodySize().getX(), 1),getColor()).draw(); //Base Gray Body
@@ -79,6 +87,10 @@ public class Candle extends DrawableElement {
     //Data is updated like this so that there are not many calls to stock get methods as those are not as efficient
     private void updateData() {
         data = stock.getData(dateTime);
+    }
+
+    public void setScale(Vector scale) {
+        this.scale = scale;
     }
 
     public boolean isGreen() {
@@ -110,6 +122,17 @@ public class Candle extends DrawableElement {
         float close = data[1];
         double candleHeight = -(close - open) * scale.getY();
         return new Vector(width * scale.getX(), candleHeight);
+    }
+
+    public Vector getWickToWickBodySize() {
+        float min = data[2];
+        float max = data[3];
+        double candleHeight = -(max - min) * scale.getY();
+        return new Vector(width * scale.getX(), candleHeight);
+    }
+
+    public Vector getScale() {
+        return scale;
     }
 
     public DateTime getDateTime() {

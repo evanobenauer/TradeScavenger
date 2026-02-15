@@ -5,6 +5,7 @@ import com.ejo.ui.element.Text;
 import com.ejo.ui.element.widget.Button;
 import com.ejo.util.math.Vector;
 import ejo.tradescavenger.element.GradientRectangle;
+import ejo.tradescavenger.scene.chartview.ChartViewScene;
 import ejo.tradescavenger.scene.datacenter.DataCenterScene;
 import ejo.tradescavenger.scene.manager.DataDisplayManager;
 import ejo.tradescavenger.setting.SettingAtlas;
@@ -73,7 +74,7 @@ public class MainMenuScene extends Scene {
         });
 
         this.startButtonLowerChartView = new Button(this, Vector.NULL(),new Vector(200,200), widgetColor,"C",() -> {
-            System.out.println("This is the ChartView Button");
+            getWindow().setSceneTransitioned(new ChartViewScene());
         });
     }
 

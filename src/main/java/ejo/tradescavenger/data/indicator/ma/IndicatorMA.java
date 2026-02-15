@@ -15,7 +15,7 @@ public abstract class IndicatorMA extends Indicator {
     }
 
     @Override
-    public float[] getNullData() {
+    protected float[] getNullData() {
         return new float[]{NULL_VAL,NULL_VAL};
     }
 

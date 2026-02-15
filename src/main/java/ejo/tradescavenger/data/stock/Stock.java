@@ -21,7 +21,7 @@ public class Stock extends HistoricalDataContainer {
     }
 
     @Override
-    public float[] getNullData() {
+    protected float[] getNullData() {
         return new float[]{NULL_VAL,NULL_VAL,NULL_VAL,NULL_VAL,NULL_VAL};
     }
 

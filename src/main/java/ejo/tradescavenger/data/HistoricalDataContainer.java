@@ -47,7 +47,7 @@ public abstract class HistoricalDataContainer extends FileCSV<HashMap<Long, floa
 
     // =============================
 
-    public abstract float[] getNullData();
+    protected abstract float[] getNullData();
 
     public float[] getData(DateTime dateTime) {
         if (dateTime == null) return getNullData();
