@@ -1,9 +1,11 @@
 package ejo.tradescavenger.data.indicator.ma;
 
 import com.ejo.util.math.MathUtil;
+import com.ejo.util.misc.LambdaUtil;
 import com.ejo.util.time.DateTime;
 import ejo.tradescavenger.data.stock.Stock;
 import ejo.tradescavenger.util.StockTimeUtil;
+import ejo.tradescavenger.util.StockTraversalUtil;
 
 public class IndicatorEMA extends IndicatorMA {
 
@@ -42,10 +44,17 @@ public class IndicatorEMA extends IndicatorMA {
             prevCloseEMA = equivalentSMA.calculate(dateTime)[1];
         }
 
-        //Generate next EMA value
         double weight = (double) 2 / (getPeriod() + 1);
-        double openEMA = MathUtil.roundDouble(open == NULL_VAL ? prevOpenEMA : open * weight + prevOpenEMA * (1 - weight), 4);
-        double closeEMA = MathUtil.roundDouble(close == NULL_VAL ? prevCloseEMA : close * weight + prevCloseEMA * (1 - weight), 4);
+
+        LambdaUtil.action<Double> calculation = (args) -> {
+            float val = (float) args[0];
+            double prevEMAVal = (double) args[1];
+            return MathUtil.roundDouble(val == NULL_VAL ? prevEMAVal : val * weight + prevEMAVal * (1 - weight), 4);
+        };
+
+        //Generate next EMA value
+        double openEMA = calculation.run(open,prevOpenEMA);
+        double closeEMA = calculation.run(close,prevCloseEMA);
         float[] result = new float[]{(float)openEMA, (float)closeEMA};
         this.data.put(dateTime.getDateTimeID(), result);
         return result;

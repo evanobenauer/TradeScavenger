@@ -42,7 +42,7 @@ public class ChartViewScene extends Scene {
             i++;
         }
 
-        cluster.setStartTime(startTime);
+        cluster.setFocusTime(startTime);
 
 
         super.draw();

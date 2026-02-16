@@ -5,44 +5,46 @@ import com.ejo.ui.element.DrawableElement;
 import com.ejo.ui.element.polygon.Rectangle;
 import com.ejo.ui.element.polygon.RoundedRectangle;
 import com.ejo.util.math.Vector;
+import com.ejo.util.misc.LambdaUtil;
 import com.ejo.util.setting.Container;
 import com.ejo.util.time.DateTime;
 import ejo.tradescavenger.data.stock.Stock;
+import ejo.tradescavenger.element.candle.Candle;
 import ejo.tradescavenger.util.StockTraversalUtil;
 
 import java.awt.*;
 import java.util.ArrayList;
 
+//TODO: Add an Indicator... to the constructor and have the ability to render indicators on the cluseter
 public class CandleCluster extends DrawableElement {
 
     private Vector size;
     private Color color;
 
     private final Stock stock;
-    private DateTime startTime;
+    private DateTime focusTime;
 
     private int candlesBack;
     private int candlesForward;
 
-    public CandleCluster(Scene scene, Vector pos, Vector size, Color color, Stock stock, DateTime startTime, int candlesBack, int candlesForward) {
+    public CandleCluster(Scene scene, Vector pos, Vector size, Color color, Stock stock, DateTime focusTime, int candlesBack, int candlesForward) {
         super(scene, pos);
         this.size = size;
         this.color = color;
 
         this.stock = stock;
-        this.startTime = startTime;
+        this.focusTime = focusTime;
 
         this.candlesBack = candlesBack;
         this.candlesForward = candlesForward;
     }
 
-    @Override
     public void draw(Vector mousePos) {
-        drawBackground(color);
+        drawBackground();
 
         //General
-        int step = stock.getTimeFrame().getSeconds();
         int candleCount = candlesBack + candlesForward + 1;
+        int step = stock.getTimeFrame().getSeconds();
 
         //Candle Dimensions
         int candleWidth = 10;
@@ -65,23 +67,12 @@ public class CandleCluster extends DrawableElement {
 
         //Traverse all candles, add usable candles to the arrayList, update MinMax from the stock
         ArrayList<Candle> candles = new ArrayList<>();
-        float focusPrice = stock.getOpen(startTime);
-        StockTraversalUtil.traverseCandles(stock,startTime.getAdded(-step * candlesBack),startTime.getAdded(step * candlesForward),(d, l) -> {
-            float[] data = stock.getData(d);
 
-            // =============
-            // Create a candle at the DateTime
-            // =============
-            Candle candle = new Candle(getScene(),stock,d,startX + (candleWidth + candleSep) * scaleX * l,focusY, focusPrice,candleWidth,new Vector(1,1));
-            candles.add(candle);
+        float focusPrice = stock.getOpen(focusTime);
 
-            // =============
-            // Update MinMax
-            // =============
-
-            float min = data[2];
-            float max = data[3];
-
+        LambdaUtil.actionVoid updateMinMax = (args) -> {
+            float min = (float) args[0];
+            float max = (float) args[1];
             //Update Min/Max price containers
             if (min != -1 && max != -1) {
                 double priceDiffHigh = max - focusPrice;
@@ -89,6 +80,24 @@ public class CandleCluster extends DrawableElement {
                 if (priceDiffHigh > priceDiffHighMax.get()) priceDiffHighMax.set(priceDiffHigh);
                 if (priceDiffLow < priceDiffLowMin.get()) priceDiffLowMin.set(priceDiffLow);
             }
+        };
+
+        //Traverse all Post candles from midpoint(Includes the target candle)
+        StockTraversalUtil.traverseCandles(stock,focusTime,candlesForward + 1,(d, c,l) -> {
+            float[] data = stock.getData(d);
+            updateMinMax.run(data[2],data[3]);
+
+            Candle candle = new Candle(getScene(),stock,d,startX + (candleWidth + candleSep) * scaleX * (c + candlesBack),focusY, focusPrice,candleWidth,new Vector(1,1));
+            candles.add(candle);
+        });
+
+        //Traverse all Pre Candles from midpoint(Does NOT include the target candle
+        StockTraversalUtil.traverseCandles(stock,focusTime.getAdded(-step),-candlesBack,(d, c,l) -> {
+            float[] data = stock.getData(d);
+            updateMinMax.run(data[2],data[3]);
+
+            Candle candle = new Candle(getScene(),stock,d,startX + (candleWidth + candleSep) * scaleX * (c + candlesBack - 1),focusY, focusPrice,candleWidth,new Vector(1,1));
+            candles.add(candle);
         });
 
         //Set ScaleY
@@ -101,7 +110,11 @@ public class CandleCluster extends DrawableElement {
         for (Candle candle : candles) {
             candle.setScale(new Vector(scaleX,scaleY));
             candle.draw();
+            //Draw indicators here
         }
+
+        //Draw Outline
+        drawOutline();
     }
 
     @Override
@@ -111,12 +124,14 @@ public class CandleCluster extends DrawableElement {
 
 
     //I stole this from my DropDown menu :)
-    private void drawBackground(Color color) {
+    private void drawBackground() {
         //Draw Drop-Down
         RoundedRectangle dropDown = new RoundedRectangle(getScene(),getPos(),size,new Color(25,25,25,150));
         dropDown.setCornerRadius(5);
         dropDown.draw();
+    }
 
+    private void drawOutline() {
         //Draw Drop-Down Outline
         int offset = 1;
         RoundedRectangle dropDownOutline = new RoundedRectangle(getScene(),getPos().getAdded(offset,offset),size.getSubtracted(new Vector(offset,offset).getMultiplied(2)),color,5,true,2);
@@ -133,8 +148,8 @@ public class CandleCluster extends DrawableElement {
         this.color = color;
     }
 
-    public void setStartTime(DateTime startTime) {
-        this.startTime = startTime;
+    public void setFocusTime(DateTime focusTime) {
+        this.focusTime = focusTime;
     }
 
     public void setCandlesBack(int candlesBack) {
@@ -155,8 +170,8 @@ public class CandleCluster extends DrawableElement {
         return color;
     }
 
-    public DateTime getStartTime() {
-        return startTime;
+    public DateTime getFocusTime() {
+        return focusTime;
     }
 
     public int getCandlesBack() {

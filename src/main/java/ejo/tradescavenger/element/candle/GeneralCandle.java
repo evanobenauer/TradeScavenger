@@ -1,4 +1,4 @@
-package ejo.tradescavenger.element;
+package ejo.tradescavenger.element.candle;
 
 import com.ejo.ui.Scene;
 import com.ejo.ui.element.DrawableElement;

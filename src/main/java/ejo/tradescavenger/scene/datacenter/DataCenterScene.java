@@ -2,7 +2,6 @@ package ejo.tradescavenger.scene.datacenter;
 
 import com.ejo.ui.Scene;
 import com.ejo.ui.element.ProgressBar;
-import com.ejo.ui.element.SideBar;
 import com.ejo.ui.element.Text;
 import com.ejo.ui.element.widget.Button;
 import com.ejo.ui.element.widget.settingwidget.DropDown;
@@ -17,7 +16,7 @@ import ejo.tradescavenger.data.indicator.ma.IndicatorEMA;
 import ejo.tradescavenger.data.indicator.ma.IndicatorSMA;
 import ejo.tradescavenger.data.stock.Stock;
 import ejo.tradescavenger.element.GradientRectangle;
-import ejo.tradescavenger.element.RemovalList;
+import ejo.tradescavenger.element.widget.RemovalList;
 import ejo.tradescavenger.scene.MainMenuScene;
 import ejo.tradescavenger.scene.datacenter.manager.IndicatorCalculationsManager;
 import ejo.tradescavenger.scene.manager.DataDisplayManager;

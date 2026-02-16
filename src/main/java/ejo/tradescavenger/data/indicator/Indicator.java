@@ -40,47 +40,24 @@ public abstract class Indicator extends HistoricalDataContainer {
         this.currentCalculationDate = null;
         this.calculating = true;
 
-        StockTraversalUtil.traverseCandles(stock,start,end,(currentDateTime, i) -> {
+        StockTraversalUtil.traverseCandles(stock,start,end,(currentDateTime, c,l) -> {
             //Update progression variables
             this.currentCalculationDate = currentDateTime;
             this.calculationProgress.set(TimeUtil.getDateTimePercent(start,currentDateTime,end));
 
             calculate(currentDateTime);
+
+            //TODO: Make sure to remove this debug code later
+            try {
+                Thread.sleep(1);
+            } catch (Exception e) {
+
+            }
         });
 
         this.calculationProgress.set(1d);
         this.currentCalculationDate = null;
         this.calculating = false;
-    }
-
-    @Deprecated
-    private void oldTraversal(DateTime start, DateTime end) {
-        if (end.getDateTimeID() < start.getDateTimeID()) return;
-        if (start.getDateTimeID() == end.getDateTimeID()) {
-            calculate(start);
-            return;
-        }
-
-        DateTime currentDateTime = DateTime.getById(start.getDateTimeID());
-
-        int loopCount = 0;
-        int step = stock.getTimeFrame().getSeconds();
-        while (currentDateTime.getDateTimeID() < end.getDateTimeID()) {
-            currentDateTime = start.getAdded(step * loopCount);
-            //If the next price is not valid, iterate the loop, but do not increment the candle
-            // so that we try again at the next one forward
-            if (!isValidDateTime(currentDateTime)) {
-                loopCount++;
-                continue;
-            }
-
-            //Update progression variables
-            this.currentCalculationDate = currentDateTime;
-            this.calculationProgress.set(TimeUtil.getDateTimePercent(start,currentDateTime,end));
-
-            calculate(currentDateTime);
-            loopCount++;
-        }
     }
 
 
@@ -90,6 +67,10 @@ public abstract class Indicator extends HistoricalDataContainer {
 
     public String getIndicatorName() {
         return name;
+    }
+
+    public DateTime getCurrentCalculationDate() {
+        return currentCalculationDate;
     }
 
     @Override

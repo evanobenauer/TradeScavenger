@@ -3,7 +3,7 @@ package ejo.tradescavenger.data.indicator.ma;
 import com.ejo.util.math.MathUtil;
 import com.ejo.util.time.DateTime;
 import ejo.tradescavenger.data.stock.Stock;
-import ejo.tradescavenger.util.StockTimeUtil;
+import ejo.tradescavenger.util.StockTraversalUtil;
 
 import java.util.ArrayList;
 
@@ -22,6 +22,32 @@ public class IndicatorSMA extends IndicatorMA {
         ArrayList<Float> closeAvgList = new ArrayList<>();
 
         //Adds the period of candles behind our goal candle together to the avg list
+        StockTraversalUtil.traverseCandles(getStock(),dateTime,-getPeriod(),(dt,c,i) -> {
+            //Add candle to the average list
+            float[] data = getStock().getData(dt);
+            float open = data[0];
+            float close = data[1];
+            if (open != NULL_VAL) openAvgList.add(open);
+            if (close != NULL_VAL) closeAvgList.add(close);
+        });
+
+        //Generate SMA value
+        double openAvg = MathUtil.roundDouble(calculateAverage(openAvgList), 4);
+        double closeAvg = MathUtil.roundDouble(calculateAverage(closeAvgList), 4);
+        float[] result = new float[]{(float)openAvg, (float)closeAvg};
+        this.data.put(dateTime.getDateTimeID(), result);
+        return result;
+    }
+
+    public static <T extends Number> double calculateAverage(ArrayList<T> values) {
+        double avg = 0;
+        for (T val : values) avg += val.doubleValue();
+        avg /= values.size();
+        return avg;
+    }
+
+
+    /*
         int candleCount = 0;
         int loopCount = 0;
         int step = getStock().getTimeFrame().getSeconds();
@@ -46,20 +72,6 @@ public class IndicatorSMA extends IndicatorMA {
             candleCount++;
             loopCount++;
         }
-
-        //Generate SMA value
-        double openAvg = MathUtil.roundDouble(calculateAverage(openAvgList), 4);
-        double closeAvg = MathUtil.roundDouble(calculateAverage(closeAvgList), 4);
-        float[] result = new float[]{(float)openAvg, (float)closeAvg};
-        this.data.put(dateTime.getDateTimeID(), result);
-        return result;
-    }
-
-    public static <T extends Number> double calculateAverage(ArrayList<T> values) {
-        double avg = 0;
-        for (T val : values) avg += val.doubleValue();
-        avg /= values.size();
-        return avg;
-    }
+     */
 
 }
