@@ -30,16 +30,16 @@ public class IndicatorCalculationsManager extends SceneManager {
         super(scene);
         this.indicatorCalculationsSideBar = new SideBar(scene, SideBar.Type.RIGHT,400,new Color(50,50,50,250),"Indicator Calculator");
 
-
         Button debugButton = new Button(scene,new Vector(30,200),new Vector(340,60),Color.RED,"DEBUG",() -> {
             indicator = getFirst();
+            indicator.getLoadedData().clear();
             Thread thread = new Thread(() -> {
                 indicator.calculate(startTime,endTime);
                 System.out.println("DONE");
                 indicatorCalculationsSideBar.removeElement(cluster,true);
             });
             thread.start();
-            cluster = new CandleCluster(scene,Vector.NULL(),new Vector(340,200),Color.RED,getFirst().getStock(),startTime,150,150);
+            cluster = new CandleCluster(scene,Vector.NULL(),new Vector(340,200),Color.RED,startTime,150,150,getFirst().getStock(),indicator);
             cluster.setPos(new Vector(30, scene.getWindow().getSize().getY() - cluster.getSize().getY() - 30));
             indicatorCalculationsSideBar.addElements(cluster);
         });

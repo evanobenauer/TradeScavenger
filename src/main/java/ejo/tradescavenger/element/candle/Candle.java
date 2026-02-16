@@ -135,6 +135,14 @@ public class Candle extends DrawableElement {
         return scale;
     }
 
+    public double getFocusY() {
+        return focusY;
+    }
+
+    public double getFocusPrice() {
+        return focusPrice;
+    }
+
     public DateTime getDateTime() {
         return dateTime;
     }

@@ -12,13 +12,14 @@ import org.lwjgl.glfw.GLFW;
 import java.awt.*;
 import java.util.HashMap;
 
+//TODO: THIS SCENE IS CURRENTLY JUST A DEBUG TESTGROUND
 public class ChartViewScene extends Scene {
 
     CandleCluster cluster;
 
     public ChartViewScene() {
         super("Chart View");
-        cluster = new CandleCluster(this,new Vector(300,300), new Vector(800,200),Color.RED, DataAtlas.LOADED_STOCK, TimeUtil.getCurrentDateTime(),15,30);
+        cluster = new CandleCluster(this,new Vector(300,300), new Vector(800,200),Color.RED, TimeUtil.getCurrentDateTime(),15,30,DataAtlas.LOADED_STOCK);
 
         addElements(cluster);
     }

@@ -34,25 +34,15 @@ public abstract class Indicator extends HistoricalDataContainer {
 
     public abstract float[] calculate(DateTime dateTime);
 
-
     public void calculate(DateTime start, DateTime end) {
         this.calculationProgress.set(0d);
         this.currentCalculationDate = null;
         this.calculating = true;
 
         StockTraversalUtil.traverseCandles(stock,start,end,(currentDateTime, c,l) -> {
-            //Update progression variables
             this.currentCalculationDate = currentDateTime;
-            this.calculationProgress.set(TimeUtil.getDateTimePercent(start,currentDateTime,end));
-
             calculate(currentDateTime);
-
-            //TODO: Make sure to remove this debug code later
-            try {
-                Thread.sleep(1);
-            } catch (Exception e) {
-
-            }
+            this.calculationProgress.set(TimeUtil.getDateTimePercent(start,currentDateTime,end));
         });
 
         this.calculationProgress.set(1d);
