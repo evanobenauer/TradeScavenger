@@ -29,7 +29,7 @@ public class StockTraversalUtil {
                 continue;
             }
 
-            code.run(currentDateTime, candleIndex, loopIndex);
+            if (code.run(currentDateTime, candleIndex, loopIndex)) break;
 
             candleIndex++;
             loopIndex++;
@@ -59,16 +59,17 @@ public class StockTraversalUtil {
                 continue;
             }
 
-            code.run(currentDateTime, candleIndex, loopIndex);
+            if (code.run(currentDateTime, candleIndex, loopIndex)) break;
 
             candleIndex += traversal;
             loopIndex += traversal;
         }
     }
 
+    //IF the lambda returns true, the loop will break
     @FunctionalInterface
     public interface CandleCode {
-        void run(DateTime currentTime, int candleIndex ,int loopIndex);
+        boolean run(DateTime currentTime, int candleIndex ,int loopIndex);
     }
 
 

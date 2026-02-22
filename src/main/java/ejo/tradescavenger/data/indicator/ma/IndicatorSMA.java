@@ -29,6 +29,7 @@ public class IndicatorSMA extends IndicatorMA {
             float close = data[1];
             if (open != NULL_VAL) openAvgList.add(open);
             if (close != NULL_VAL) closeAvgList.add(close);
+            return false;
         });
 
         //Generate SMA value

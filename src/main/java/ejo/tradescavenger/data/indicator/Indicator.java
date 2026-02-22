@@ -43,6 +43,7 @@ public abstract class Indicator extends HistoricalDataContainer {
             this.currentCalculationDate = currentDateTime;
             calculate(currentDateTime);
             this.calculationProgress.set(TimeUtil.getDateTimePercent(start,currentDateTime,end));
+            return false;
         });
 
         this.calculationProgress.set(1d);

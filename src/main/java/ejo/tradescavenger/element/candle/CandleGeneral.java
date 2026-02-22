@@ -7,14 +7,14 @@ import com.ejo.util.math.Vector;
 
 import java.awt.*;
 
-public class GeneralCandle extends DrawableElement {
+public class CandleGeneral extends DrawableElement {
 
     private Vector size;
     private float upperWickSize;
     private float lowerWickSize;
     private Color color;
 
-    public GeneralCandle(Scene scene, Vector pos, Vector size, float upperWickSize, float lowerWickSize, Color color) {
+    public CandleGeneral(Scene scene, Vector pos, Vector size, float upperWickSize, float lowerWickSize, Color color) {
         super(scene, pos);
         this.size = size;
         this.upperWickSize = upperWickSize;

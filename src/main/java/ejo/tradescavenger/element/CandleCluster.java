@@ -63,7 +63,12 @@ public class CandleCluster extends DrawableElement {
         double focusY = getPos().getY() + size.getY() / 2;
         int startX = getPos().getXi() + candleSep;
 
-        float focusPrice = stock.getOpen(focusTime);
+        //Focus price
+        float focusPricei = stock.getOpen(focusTime);
+        for (int i = 0; focusPricei == -1; i++) { //Assures that the focus price never hits -1
+            focusPricei = stock.getOpen(focusTime.getAdded(step * i));
+        }
+        float focusPrice = focusPricei;
 
         //ScaleX Definition
         double scaleX = (size.getX() - candleSep) / (candleCount * (candleWidth + candleSep));
@@ -93,6 +98,7 @@ public class CandleCluster extends DrawableElement {
 
             Candle candle = new Candle(getScene(),stock,d,startX + (candleWidth + candleSep) * scaleX * (c + candlesBack - 1),focusY, focusPrice,candleWidth,new Vector(1,1));
             candles.add(candle);
+            return false;
         });
 
         //Reverse array list to keep it in order
@@ -105,6 +111,7 @@ public class CandleCluster extends DrawableElement {
 
             Candle candle = new Candle(getScene(),stock,d,startX + (candleWidth + candleSep) * scaleX * (c + candlesBack),focusY, focusPrice,candleWidth,new Vector(1,1));
             candles.add(candle);
+            return false;
         });
 
         //Set ScaleY

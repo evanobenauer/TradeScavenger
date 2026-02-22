@@ -5,6 +5,7 @@ import ejo.tradescavenger.data.HistoricalDataContainer;
 import ejo.tradescavenger.util.StockTimeUtil;
 import ejo.tradescavenger.util.TimeFrame;
 
+//Stock data is stored as "ID, OPEN, CLOSE, MIN, MAX"
 public class Stock extends HistoricalDataContainer {
 
     //Stock Information
