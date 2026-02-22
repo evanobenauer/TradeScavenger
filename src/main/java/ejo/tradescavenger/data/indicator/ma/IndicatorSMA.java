@@ -26,7 +26,7 @@ public class IndicatorSMA extends IndicatorMA {
             //Add candle to the average list
             float[] data = getStock().getData(dt);
             float open = data[0];
-            float close = data[1];
+            float close = data[3];
             if (open != NULL_VAL) openAvgList.add(open);
             if (close != NULL_VAL) closeAvgList.add(close);
             return false;

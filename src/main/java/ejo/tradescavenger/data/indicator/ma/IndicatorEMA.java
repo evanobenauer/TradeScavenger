@@ -23,7 +23,7 @@ public class IndicatorEMA extends IndicatorMA {
         //Get Current Stock Data
         float[] data = getStock().getData(dateTime);
         float open = data[0];
-        float close = data[1];
+        float close = data[3];
 
         //Get previous candle time
         int loopCount = 1;

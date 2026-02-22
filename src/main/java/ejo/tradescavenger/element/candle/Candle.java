@@ -52,8 +52,8 @@ public class Candle extends DrawableElement {
     public void draw(Vector mousePos) {
         updateData();
         float open = data[0];
+        float max = data[1];
         float min = data[2];
-        float max = data[3];
 
         //Wicks
         int colorOffset = 100;
@@ -95,13 +95,13 @@ public class Candle extends DrawableElement {
 
     public boolean isGreen() {
         float open = data[0];
-        float close = data[1];
+        float close = data[3];
         return close > open;
     }
 
     public boolean isRed() {
         float open = data[0];
-        float close = data[1];
+        float close = data[3];
         return close < open;
     }
 
@@ -119,14 +119,14 @@ public class Candle extends DrawableElement {
 
     public Vector getBodySize() {
         float open = data[0];
-        float close = data[1];
+        float close = data[3];
         double candleHeight = -(close - open) * scale.getY();
         return new Vector(width * scale.getX(), candleHeight);
     }
 
     public Vector getWickToWickBodySize() {
         float min = data[2];
-        float max = data[3];
+        float max = data[1];
         double candleHeight = -(max - min) * scale.getY();
         return new Vector(width * scale.getX(), candleHeight);
     }

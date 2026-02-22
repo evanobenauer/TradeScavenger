@@ -36,9 +36,12 @@ public class IndicatorCalculationsManager extends SceneManager {
         super(scene);
         this.indicatorCalculationsSideBar = new SideBar(scene, SideBar.Type.RIGHT,400,new Color(50,50,50,250),"Indicator Calculator");
         this.calculationProgressBar = new ProgressBar<>(scene,new Vector(30,0),new Vector(340,30),Color.RED,new Container<>(0d),0,1);
+
         Button debugButton = new Button(scene,new Vector(30,200),new Vector(340,60),Color.RED,"DEBUG",() -> {
             indicator = getFirst();
             indicator.getLoadedData().clear();
+            startTime = DataAtlas.LOADED_STOCK.getLoadedDateRange()[0];
+            endTime = DataAtlas.LOADED_STOCK.getLoadedDateRange()[1];
             Thread thread = new Thread(() -> {
                 indicator.calculate(startTime,endTime);
                 System.out.println("DONE");

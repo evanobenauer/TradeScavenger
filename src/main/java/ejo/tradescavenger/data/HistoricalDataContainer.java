@@ -13,6 +13,7 @@ import java.util.HashMap;
 
 //Data Hash Setup: Key = DateTimeID, Value = float array
 // (maybe use a linked hashmap for better traversing. Memory is much higher though which for this app is not good)
+// A treemap may also be good?
 public abstract class HistoricalDataContainer extends FileCSV<HashMap<Long, float[]>,HashMap<Long, float[]>> {
 
     protected static final int NULL_VAL = -1;
@@ -200,7 +201,7 @@ public abstract class HistoricalDataContainer extends FileCSV<HashMap<Long, floa
 
     //This save method does NOT overwrite the previous data stored in the CSV
     //The method will also call upon load(), and the file will be updated accordingly
-    //TODO: Look into how this affects progress. It may not function properly or accurately
+    //TODO: Look into how this affects progress. Progress may not function properly or accurately
     public boolean save() {
         //Put all currently data into a new map
         HashMap<Long, float[]> currentMap = (HashMap<Long, float[]>) data.clone();

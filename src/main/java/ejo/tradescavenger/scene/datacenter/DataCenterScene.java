@@ -216,8 +216,6 @@ public class DataCenterScene extends Scene  {
             this.progressBar.draw();
         }
 
-        //Indicator Calculating
-        //TODO: add more if-draw statements here for the progress bar
     }
 
 

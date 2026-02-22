@@ -34,7 +34,7 @@ public class RenderMA extends DrawableElement {
         ArrayList<Vector> points = new ArrayList<>();
         for (Candle candle : candleList) {
             float[] data = ma.getData(candle.getDateTime());
-            float close = data[0];
+            float close = data[1];
             double maY = candle.getFocusY() - (close * candle.getScale().getY()) + candle.getFocusPrice() * candle.getScale().getY();
             if (close != -1)
                 points.add(new Vector(candle.getPos().getX() + (candle.getBodySize().getX() / 2), maY));//This is a little buggy with precise positioning of points for some reason

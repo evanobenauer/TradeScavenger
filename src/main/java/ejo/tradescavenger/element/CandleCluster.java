@@ -67,6 +67,7 @@ public class CandleCluster extends DrawableElement {
         float focusPricei = stock.getOpen(focusTime);
         for (int i = 0; focusPricei == -1; i++) { //Assures that the focus price never hits -1
             focusPricei = stock.getOpen(focusTime.getAdded(step * i));
+            if (i > 50) break; //Only do this for 50 loops max
         }
         float focusPrice = focusPricei;
 
@@ -94,7 +95,7 @@ public class CandleCluster extends DrawableElement {
         //Traverse all Pre Candles from midpoint(Does NOT include the target candle
         StockTraversalUtil.traverseCandles(stock,focusTime.getAdded(-step),-candlesBack,(d, c,l) -> {
             float[] data = stock.getData(d);
-            updateMinMax.run(data[2],data[3]);
+            updateMinMax.run(data[2],data[1]);
 
             Candle candle = new Candle(getScene(),stock,d,startX + (candleWidth + candleSep) * scaleX * (c + candlesBack - 1),focusY, focusPrice,candleWidth,new Vector(1,1));
             candles.add(candle);
@@ -107,7 +108,7 @@ public class CandleCluster extends DrawableElement {
         //Traverse all Post candles from midpoint(Includes the target candle)
         StockTraversalUtil.traverseCandles(stock,focusTime,candlesForward + 1,(d, c,l) -> {
             float[] data = stock.getData(d);
-            updateMinMax.run(data[2],data[3]);
+            updateMinMax.run(data[2],data[1]);
 
             Candle candle = new Candle(getScene(),stock,d,startX + (candleWidth + candleSep) * scaleX * (c + candlesBack),focusY, focusPrice,candleWidth,new Vector(1,1));
             candles.add(candle);

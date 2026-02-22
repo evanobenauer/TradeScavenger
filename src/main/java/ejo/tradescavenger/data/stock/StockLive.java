@@ -29,6 +29,7 @@ public class StockLive extends Stock {
     private float open;
     private float min;
     private float max;
+    private int volume;
 
     //Live Open Time
     private DateTime openTime;
@@ -51,7 +52,7 @@ public class StockLive extends Stock {
         //this.priceSource = priceSource;
 
         //Init Live Data Variables
-        this.setAllData(NULL_VAL);
+        this.resetAllData(NULL_VAL);
         this.openTime = null;
         this.candleProgress = new Container<>(0d);
 
@@ -152,7 +153,7 @@ public class StockLive extends Stock {
     private void updateOpen() {
         this.doOpen.run(() -> {
             this.openTime = getAdjustedCurrentTime();
-            setAllData(price);
+            resetAllData(price);
         });
     }
 
@@ -167,9 +168,9 @@ public class StockLive extends Stock {
         }
         this.doClose.run(() -> {
             DateTime ct = getAdjustedCurrentTime();
-            //Save Live Data as Historical [Data is stored as (DATETIME,OPEN,CLOSE,MIN,MAX)]
-            float[] timeFrameData = {open, price, min, max};
-            DateTime openTime = new DateTime(ct.getYear(), ct.getMonth(), ct.getDay(), ct.getHour(), ct.getMinute(), ct.getSecond() - timeFrame.getSeconds());
+            //Save Live Data as Historical [Data is stored as (DATETIME,OPEN,MAX,MIN,CLOSE,VOL)]
+            float[] timeFrameData = {open, max, min, price,volume};
+            DateTime openTime = ct.getAdded(-timeFrame.getSeconds());
             if (openTime != null) data.put(openTime.getDateTimeID(), timeFrameData);
 
             //Set stock ready for open
@@ -251,17 +252,18 @@ public class StockLive extends Stock {
      *
      * @param value
      */
-    private void setAllData(float value) {
+    private void resetAllData(float value) {
         this.price = value;
         this.open = value;
         this.min = value;
         this.max = value;
+        this.volume = 0;
     }
 
     @Override
     public float[] getData(DateTime dateTime) {
         if (dateTime == null) return getNullData();
-        if (dateTime.equals(openTime)) return new float[]{open,price,min,max};
+        if (dateTime.equals(openTime)) return new float[]{open,max,min,price,volume};
         return super.getData(dateTime);
     }
 
@@ -279,6 +281,10 @@ public class StockLive extends Stock {
 
     public float getMax() {
         return max;
+    }
+
+    public float getVolume() {
+        return volume;
     }
 
 

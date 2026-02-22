@@ -5,7 +5,7 @@ import ejo.tradescavenger.data.HistoricalDataContainer;
 import ejo.tradescavenger.util.StockTimeUtil;
 import ejo.tradescavenger.util.TimeFrame;
 
-//Stock data is stored as "ID, OPEN, CLOSE, MIN, MAX"
+//Stock data is stored as "ID, OPEN, MAX, MIN, CLOSE"
 public class Stock extends HistoricalDataContainer {
 
     //Stock Information
@@ -36,7 +36,7 @@ public class Stock extends HistoricalDataContainer {
     }
 
     public float getClose(DateTime dateTime) {
-        return getData(dateTime)[1];
+        return getData(dateTime)[3];
     }
 
     public float getMin(DateTime dateTime) {
@@ -44,7 +44,7 @@ public class Stock extends HistoricalDataContainer {
     }
 
     public float getMax(DateTime dateTime) {
-        return getData(dateTime)[3];
+        return getData(dateTime)[1];
     }
 
     public float getVolume(DateTime dateTime) {

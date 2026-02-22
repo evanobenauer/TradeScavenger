@@ -51,7 +51,7 @@ public class SimulatedTrade {
         StockTraversalUtil.traverseCandles(stock,entryTime,maxBarsInTrade, (dt,c,i) -> {
             float[] data = stock.getData(dt);
             float min = data[2];
-            float max = data[3];
+            float max = data[1];
 
             //NOTE: if the candle hits both TP and SL, it counts as a LOSS as it is inconclusive
             if (sl <= min) {
@@ -76,7 +76,7 @@ public class SimulatedTrade {
         StockTraversalUtil.traverseCandles(stock,entryTime,maxBarsInTrade, (dt,c,i) -> {
             float[] data = stock.getData(dt);
             float min = data[2];
-            float max = data[3];
+            float max = data[1];
 
             //NOTE: if the candle hits both TP and SL, it counts as a LOSS as it is inconclusive
             if (sl >= max) {

@@ -1,6 +1,7 @@
 package ejo.tradescavenger.scene.chartview;
 
 import com.ejo.ui.Scene;
+import com.ejo.ui.element.Text;
 import com.ejo.util.math.Vector;
 import com.ejo.util.time.DateTime;
 import com.ejo.util.time.TimeUtil;
@@ -42,6 +43,9 @@ public class ChartViewScene extends Scene {
             if (i == index) break;
             i++;
         }
+
+        Text text = new Text(this,new Vector(10,10),startTime + "",new Font("Arial",Font.PLAIN,20),Color.WHITE, Text.Type.DYNAMIC);
+        text.draw();
 
         cluster.setFocusTime(startTime);
 
